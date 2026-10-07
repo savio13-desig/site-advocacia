@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartão digital · Andrade Ribeiro Advocacia</title>
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+<div class="selo-demo">Amostra de demonstração · novapicks · <a href="index.html">site do escritório</a></div>
+<main>
+  <article class="cartao-digital" id="cd"></article>
+  <div class="container nao-imprimir" style="max-width:560px;padding-bottom:var(--e6)">
+    <label for="base">Endereço do site (vai no QR do cartão)</label><input type="text" id="base" inputmode="url">
+    <p class="nota">Para cartão de visita e papel timbrado. Quem aponta a câmera abre o site do escritório.</p>
+    <button class="btn btn-prim" id="imprimir" type="button">Imprimir cartão</button>
+  </div>
+</main>
+<script src="vendor/qrcode.js"></script>
+<script src="js/dados.js"></script>
+<script>
+(function () {
+  "use strict";
+  var E = window.ESCRITORIO, A = E.advogados[0], $ = function (s) { return document.querySelector(s); };
+  function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  var base = $("#base"); base.value = location.href.replace(/cartao\.html.*$/, "index.html");
+  function vcf() {
+    return ["BEGIN:VCARD", "VERSION:3.0", "FN:" + A.nome, "ORG:" + E.marca, "TITLE:Advogada", "TEL;TYPE=CELL:+" + E.whatsapp, "TEL;TYPE=WORK:" + E.telefone, "EMAIL:" + E.email, "ADR;TYPE=WORK:;;" + E.endereco + ";;;;", "URL:" + base.value, "NOTE:" + A.oab, "END:VCARD"].join("\r\n");
+  }
+  function desenhar() {
+    var q = qrcode(0, "M"); q.addData(base.value || "https://"); q.make();
+    var ini = A.nome.replace(/^Dra?\.\s*/, "").split(" ").map(function (x) { return x.charAt(0); }).slice(0, 2).join("");
+    $("#cd").innerHTML = '<div class="cd-topo"><b style="font-size:1.1rem;color:#fff;font-family:var(--fonte-titulo)">' + esc(E.marca) + '</b></div><div class="cd-avatar" aria-hidden="true" style="font-family:var(--fonte-titulo)">' + esc(ini) + '</div><div class="cd-corpo"><h1>' + esc(A.nome) + "</h1><p>" + esc(A.oab) + "</p><p>" + esc(A.foco) + "</p><p>" + esc(E.endereco) + '</p><div class="cd-botoes">' +
+      '<a class="btn btn-ouro" target="_blank" rel="noopener" href="https://wa.me/' + E.whatsapp + "?text=" + encodeURIComponent("Olá! Gostaria de falar com o escritório " + E.curto + ".") + '">Falar pelo WhatsApp</a>' +
+      '<a class="btn btn-prim" href="' + esc(base.value) + '">Conhecer o escritório</a><a class="btn btn-contorno" href="mailto:' + esc(E.email) + '">Enviar e-mail</a><button class="btn btn-contorno" id="salvar" type="button">Salvar contato no celular</button></div>' +
+      '<div class="qrbox">' + q.createSvgTag({ cellSize: 4, margin: 1, scalable: true }).replace("<svg", '<svg role="img" aria-label="QR code do site do escritório"') + '</div><p class="nota">Aponte a câmera para abrir o site.</p></div>';
+    $("#salvar").addEventListener("click", function () {
+      var u = URL.createObjectURL(new Blob([vcf()], { type: "text/vcard" })), a = document.createElement("a");
+      a.href = u; a.download = A.nome.replace(/^Dra?\.\s*/, "").toLowerCase().replace(/\s+/g, "-") + ".vcf"; a.click(); setTimeout(function () { URL.revokeObjectURL(u); }, 1000);
+    });
+  }
+  base.addEventListener("input", desenhar); $("#imprimir").addEventListener("click", function () { window.print(); });
+  desenhar();
+})();
+</script>
+</body>
+</html>
