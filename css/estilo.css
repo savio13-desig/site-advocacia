@@ -206,3 +206,27 @@ summary { font-family: var(--fonte-titulo); font-size: 1.15rem; font-weight: 600
 .resultado .meta { color: var(--claro); }
 .tag.urg { background: #fdecea; color: #8a1c10; border: 1px solid var(--erro); }
 .contato[data-urg="1"] { border-left-color: var(--erro); }
+
+/* ===== Imagens ===== */
+.hero { position: relative; isolation: isolate; }
+.hero-foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% center; z-index: -2; }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(29,27,34,.96) 0%, rgba(29,27,34,.84) 50%, rgba(82,21,38,.7) 100%); }
+.par-fotos { display: grid; gap: var(--e2); grid-template-columns: 1fr; margin: 0 0 var(--e4); }
+@media (min-width: 760px) { .par-fotos { grid-template-columns: 1fr 1fr; } }
+.par-fotos figure, .faixa-foto { margin: 0; }
+.par-fotos img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--raio); display: block; }
+.par-fotos figcaption, .faixa-foto figcaption, .foto-prop figcaption { font-size: .85rem; color: var(--texto-suave); margin-top: 6px; }
+.faixa-foto { margin-top: var(--e4); }
+.faixa-foto img { width: 100%; height: auto; aspect-ratio: 21 / 8; object-fit: cover; object-position: center 62%; border-radius: var(--raio); display: block; }
+.cta-final { position: relative; isolation: isolate; }
+.cta-foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.cta-final::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(82,21,38,.93), rgba(107,29,51,.9)); }
+.foto-prop { margin: 0 0 var(--e4); }
+.foto-prop img { width: 100%; height: auto; border-radius: var(--raio); display: block; }
+.galeria { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); margin-bottom: var(--e4); }
+.galeria img { width: 100%; height: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--raio); display: block; }
+@media (max-width: 560px) { .galeria { grid-template-columns: 1fr 1fr; } .galeria img:first-child { grid-column: span 2; aspect-ratio: 16 / 9; } }
+@media (max-width: 859px) {
+  .hero::before { background: linear-gradient(180deg, rgba(29,27,34,.86), rgba(29,27,34,.66)); }
+  .hero-foto { object-position: 80% center; }
+}
